@@ -1,1 +1,1 @@
-This is the repository for the course Numerical Recipes for Astrophysics (NUR). My tutorials will be updated here. 
+This is the repository for the course Numerical Recipes for Astrophysics (NUR).
