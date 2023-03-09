@@ -1,0 +1,11 @@
+# Iteratively doing LU decomposition 10 times for improved accuracy
+    coeffs_iterated = coefficients
+    for j in range(10):
+        b_new = vandermonde@coeffs_iterated - y_data
+        int_y = solver.forward_sub(L = L_v, b = b_new, index = index_v)
+        delta_coeffs = solver.backward_sub(U = U_v, y = int_y)
+        coeffs_iterated = coeffs_iterated - delta_coeffs
+    
+    polynomial_iterated = np.zeros((len(x_points),))
+    for j in range(N):
+        polynomial_iterated += coeffs_iterated[j]*x_points**j

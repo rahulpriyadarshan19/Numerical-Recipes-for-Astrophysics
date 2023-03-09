@@ -1,0 +1,47 @@
+def LU_Crout(self, A):
+        """LU decomposition for a non-singular, square matrix using the improved Crout's algorithm.  
+
+        Parameters
+        ----------
+        A : numpy.ndarray
+            Matrix of interest
+
+        Returns
+        -------
+        L: numpy.ndarray
+            Decomposed lower triangular matrix.
+        U: numpy.ndarray
+            Decomposed upper triangular matrix.
+        index: numpy.ndarray
+            Vector containing indices of pivot elements in the matrix. 
+        """
+        n = np.shape(A)[0]
+        LU = copy.deepcopy(A)
+        index = np.zeros((n,))
+
+        # Looping over columns
+        for k in range(n):
+            # Finding the index of the largest element
+            col = LU[:,k]
+            i_max_temp = np.argmax(np.abs(col[k:]))
+            pivot = col[k:][i_max_temp]
+            i_max = np.where(col == pivot)[0][0]
+
+            # Swapping rows
+            if i_max != k:
+                LU[[i_max, k]] = LU[[k, i_max]]
+            index[k] = i_max
+
+            # Setting the elements of LU
+            for i in range(k+1, n):
+                LU[i,k] = LU[i,k]/LU[k,k]
+                for j in range(k+1, n):
+                    LU[i,j] = LU[i,j] - LU[i,k]*LU[k,j]
+
+        # Splitting the upper and lower triangular matrices
+        U = np.triu(LU)
+        L = np.tril(LU)
+        for i in range(n):
+            L[i,i] = 1
+
+        return L, U, index

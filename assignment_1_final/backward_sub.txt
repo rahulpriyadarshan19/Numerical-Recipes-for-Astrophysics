@@ -1,0 +1,23 @@
+def backward_sub(self, U, y):
+        """Backward substitution for an upper triangular matrix and a constant vector.
+
+        Parameters
+        ----------
+        U : numpy.ndarray
+            Decomposed upper triangular matrix.
+        y : _type_
+            Vector of constants.  
+
+        Returns
+        -------
+        x: numpy.ndarray
+            Solution vector.
+        """
+        n = len(y)
+        x = np.zeros((n,))
+        x[n-1] = y[n-1]/U[n-1,n-1]
+        for i in range(n-1,-1,-1):
+            beta_ij_x_j = np.array([U[i,j]*x[j] for j in range(i+1,n)])
+            x[i] = (1/U[i,i])*(y[i] - np.sum(beta_ij_x_j))
+
+        return x

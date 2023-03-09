@@ -1,0 +1,6 @@
+# LU decomposition that solves for the coefficients
+    L_v, U_v, index_v = solver.LU_Crout(A = vandermonde)
+    intermediate_y = solver.forward_sub(L = L_v, b = y_data, index = index_v)
+    coefficients = solver.backward_sub(U = U_v, y = intermediate_y)
+    with open("coefficients.txt", "w") as f:
+        print("Coefficients: ", coefficients, file = f)

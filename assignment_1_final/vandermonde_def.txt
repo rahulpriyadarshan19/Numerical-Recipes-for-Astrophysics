@@ -1,0 +1,10 @@
+# Loading the data
+data = np.loadtxt("Vandermonde.txt")
+x_data = data[:,0]
+y_data = data[:,1]
+N = len(x_data)
+
+# Creating the Vandermonde matrix
+vandermonde = np.zeros((N,N))
+for i in range(N):
+    vandermonde[:,i] = x_data**i

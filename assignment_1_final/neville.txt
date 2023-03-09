@@ -1,0 +1,32 @@
+# Neville's algorithm
+    def neville(self, x, x_data, y_data, order):
+        """Computes the Lagrange polynomial at a point of interest using Neville's algorithm.
+
+        Parameters
+        ----------
+        x : float64
+            Point of interest at which Lagrange polynomial needs to be evaluated.
+        x_data : numpy.ndarray
+            x-coordinates of known data points
+        y_data : numpy.ndarray
+            y-coordinates of known data points
+        order : int
+            Order of the Lagrange polynomial.
+
+        Returns
+        -------
+        p[0]: float64
+            Value of Lagrange polynomial at point of interest.
+        """
+        interval = self.bisection(x_value = x, x_data = x_data, order = order)
+        M = order + 1
+        indices = np.where(np.in1d(x_data, interval))
+        p = y_data[indices]
+
+        # Computing higher order estimates iteratively. 
+        for k in range(1, M):
+            for i in range(0, M - k):
+                j = i + k
+                weighted_sum = (interval[j] - x)*p[i] + (x - interval[i])*p[i+1]
+                p[i] = weighted_sum/(interval[j] - interval[i])
+        return p[0]

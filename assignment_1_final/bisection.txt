@@ -1,0 +1,63 @@
+# Bisection algorithm to find the interval in which a point/array belongs
+    def bisection(self, x_value, x_data, order):
+        """Returns an interval containing the point of interest.
+
+        Parameters
+        ----------
+        x_value : float64
+            The point of interest whose interval needs to be found.
+        x_data : numpy.ndarray
+            Set of increasing coordinates which act as different intervals.
+        order : int
+            Determines the number of extra points to be included.
+
+        Returns
+        -------
+        interval: numpy.ndarray
+            The interval (and possibly a few surrounding points) containing the point of interest.
+        """
+        # Finding the interval in which the point resides
+        x_half = x_data
+        while len(x_half) > 2:
+            n = len(x_half)
+            x_right_half = x_half[int(n/2):]
+            x_left_half = x_half[0:int(n/2)+1]
+            if x_value <= x_left_half[-1]:
+                x_half = x_left_half
+            if x_value >= x_right_half[0]:
+                x_half = x_right_half
+
+        # Need to add new points if order != 1
+        no_of_new_points = order - 1
+        left_bdy, right_bdy = x_half
+        left_ind = np.where(x_data == left_bdy)[0][0]
+        right_ind = np.where(x_data == right_bdy)[0][0]
+
+        # Half of the number of new points are added on either side
+        right_new_indices_no = int(0.5*no_of_new_points)
+        left_new_indices_no = no_of_new_points - right_new_indices_no
+        new_right_ind = np.arange(right_ind + 1, right_ind + right_new_indices_no + 1, 1)
+        new_right_ind = new_right_ind.astype(int)
+        new_left_ind = np.arange(left_ind - 1, left_ind - left_new_indices_no - 1, -1)
+        new_left_ind = new_left_ind.astype(int)
+
+        # The arrays containing the new left and right indices 
+        # are added to the old array and sorted
+        indices = np.array([left_ind, right_ind])
+        indices = np.append(indices, new_left_ind)
+        indices = np.append(indices, new_right_ind)
+        indices = self.sort(indices)
+
+        # Indices outside x_data are shifted inside appropriately
+        negative_indices = indices[indices < 0]
+        swap_negative_indices = np.arange(indices[-1] + 1, indices[-1] + 1 + len(negative_indices), 1)
+        indices = np.append(indices, swap_negative_indices)
+        indices = indices[~(indices < 0)]
+        indices = self.sort(indices)
+        extended_indices = indices[indices > len(x_data) - 1]
+        swap_extended_indices = np.arange(indices[0] - 1, indices[0] - len(extended_indices) - 1, -1)
+        indices = np.append(indices, swap_extended_indices)
+        indices = indices[~(indices > len(x_data) - 1)]
+        indices = self.sort(indices)
+        interval = np.take(x_data, indices)
+        return interval

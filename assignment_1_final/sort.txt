@@ -1,0 +1,20 @@
+# Function to sort an array
+    def sort(self, a):
+        """Bubble sort function to sort an array.
+
+        Parameters
+        ----------
+        a : numpy.ndarray
+            Array of interest.
+
+        Returns
+        -------
+        a: numpy.ndarray
+            Sorted array.
+        """
+        N = len(a)
+        for i in range(N):
+            for j in range(N - i - 1):
+                if a[j] > a[j + 1]:
+                    a[[j, j + 1]] = a[[j + 1, j]]
+        return a
